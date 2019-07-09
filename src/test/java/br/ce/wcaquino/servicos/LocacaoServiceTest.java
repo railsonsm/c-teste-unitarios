@@ -5,7 +5,11 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.util.Date;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -19,23 +23,50 @@ import br.ce.wcaquino.exception.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
-
+	
+	private  LocacaoService service = new LocacaoService();
+	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+	
+	//executa antes do teste
+	@Before
+	public void setup() {
+		service = new LocacaoService();
+	}	
 
+	@After
+	public void tearDown() {
+		
+	}
+	
+	//executa antes da classe do teste
+	@BeforeClass
+	public static void setupClass() {
+
+	}	
+
+	@AfterClass
+	public static void tearDownClass() {
+		
+	}
+	
 	@Test
 	public void testeLocacao() throws Exception {
 		// cenario
-		LocacaoService service = new LocacaoService();
+		
 		Usuario usuario = new Usuario("Railson");
 		Filme filme = new Filme("Filme 1", 1, 5.0);
 
 		// acao
 		Locacao locacao = service.alugarFilme(usuario, filme);
+		
 		// verificao
+		
+		//checkThat checa todos os teste e não para no primeiro quando da erro como o assertThat	
 		error.checkThat(locacao.getValor(), is(equalTo(5.0)));
 		error.checkThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()), is(true));
 		error.checkThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)),
@@ -43,21 +74,24 @@ public class LocacaoServiceTest {
 
 	}
 
+	//forma elegante
 	@Test(expected = FilmeSemEstoqueExption.class)
 	public void testeLocacao_filmeSemEstoque() throws Exception {
 		// cenario
-		LocacaoService service = new LocacaoService();
+		
 		Usuario usuario = new Usuario("Railson");
 		Filme filme = new Filme("Filme 1", 0, 5.0);
 
 		// acao
 		service.alugarFilme(usuario, filme);
 	}
-
+	
+	
+	//forma robusta, permite um controle maior sobre o teste
 	@Test
 	public void restLocacaoUsuarioVazio() throws FilmeSemEstoqueExption {
 		// cenario
-		LocacaoService service = new LocacaoService();
+
 		Filme filme = new Filme("Filme 1", 1, 5.0);
 
 		// acao
@@ -69,10 +103,10 @@ public class LocacaoServiceTest {
 		}
 	}
 
+	//melhor forma de tratar excpetion
 	@Test
 	public void testeLocacaoFilmeVazio() throws FilmeSemEstoqueExption, LocadoraException {
 		// cenario
-		LocacaoService service = new LocacaoService();
 		Usuario usuario = new Usuario("Railson");
 		
 		exception.expect(LocadoraException.class);
