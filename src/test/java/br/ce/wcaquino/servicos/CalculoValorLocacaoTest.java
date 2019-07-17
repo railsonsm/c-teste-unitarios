@@ -1,5 +1,6 @@
 package br.ce.wcaquino.servicos;
 
+import static br.ce.wcaquino.servicos.builders.FilmeBuilder.umFilme;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -43,24 +44,24 @@ public class CalculoValorLocacaoTest {
 	@Parameters(name = "{2}")
 	public static Collection<Object[]> getParametros(){
 		return Arrays.asList(new Object[][]{
-			{Arrays.asList(new Filme("Filme 1", 2, 4.0),
-					new Filme("Filme 2", 2, 4.0),
-					new Filme("Filme 3", 2, 4.0)), 11.0, "3 Filmes: 25%"},
-			{Arrays.asList(new Filme("Filme 1", 2, 4.0)
-					,new Filme("Filme 2", 2, 4.0)
-					,new Filme("Filme 3", 2, 4.0)
-					,new Filme("Filme 4", 2, 4.0)), 13.0, "4 Filmes: 50%"},
-			{Arrays.asList(new Filme("Filme 1", 2, 4.0)
-					,new Filme("Filme 2", 2, 4.0)
-					,new Filme("Filme 3", 2, 4.0)
-					,new Filme("Filme 4", 2, 4.0)
-					,new Filme("Filme 5", 2, 4.0)), 14.0, "5 Filmes: 75%"},
-			{Arrays.asList(new Filme("Filme 1", 2, 4.0)
-					,new Filme("Filme 2", 2, 4.0)
-					,new Filme("Filme 3", 2, 4.0)
-					,new Filme("Filme 4", 2, 4.0)
-					,new Filme("Filme 5", 2, 4.0)
-					,new Filme("Filme 6", 2, 4.0)), 14.0, "6 Filmes: 100%"}
+			{Arrays.asList(umFilme().agora(),
+					umFilme().agora(),
+					umFilme().agora()), 11.0, "3 Filmes: 25%"},
+			{Arrays.asList(umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()), 13.0, "4 Filmes: 50%"},
+			{Arrays.asList(umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()), 14.0, "5 Filmes: 75%"},
+			{Arrays.asList(umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()
+					,umFilme().agora()), 14.0, "6 Filmes: 100%"}
 		});
 	}
 	
