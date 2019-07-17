@@ -12,9 +12,11 @@ import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -190,7 +192,13 @@ public class LocacaoServiceTest {
 	}
 	
 	@Test
+	//@Ignore nao executa o teste, mas aparece na runs q ele estar skipped
 	public void naoDeveDevolverFilmeNoDomingo() throws FilmeSemEstoqueExption, LocadoraException {
+		
+		//executa o teste de acordo com o assume no caso no domingo
+		//Assumebasically significa "não execute este teste se estas condições não se aplicarem"
+		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.MONDAY));
+		
 		//cenario
 		Usuario usuario = new Usuario();
 		List<Filme>filmes = Arrays.asList(new Filme("Filme 1", 1, 5.0));
@@ -199,7 +207,7 @@ public class LocacaoServiceTest {
 		Locacao locacao = service.alugarFilme(usuario, filmes);
 		
 		//verificacao
-		Boolean ehDomingo = DataUtils.verificarDiaSemana(locacao.getDataRetorno(), Calendar.WEDNESDAY);
+		Boolean ehDomingo = DataUtils.verificarDiaSemana(locacao.getDataRetorno(), Calendar.MONDAY);
 		Assert.assertTrue(ehDomingo);
 	}
 	
