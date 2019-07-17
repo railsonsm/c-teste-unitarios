@@ -1,5 +1,9 @@
 package br.ce.wcaquino.servicos;
 
+import static br.ce.wcaquino.servicos.mathers.MathersPropios.caiEm;
+import static br.ce.wcaquino.servicos.mathers.MathersPropios.caiNumaSegunda;
+import static br.ce.wcaquino.servicos.mathers.MathersPropios.ehHoje;
+import static br.ce.wcaquino.servicos.mathers.MathersPropios.ehHojeComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -15,19 +19,17 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.junit.runners.MethodSorters;
 
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exception.FilmeSemEstoqueExption;
 import br.ce.wcaquino.exception.LocadoraException;
+import br.ce.wcaquino.servicos.mathers.DiaSemanaMather;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
@@ -78,6 +80,9 @@ public class LocacaoServiceTest {
 		error.checkThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()), is(true));
 		error.checkThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)),
 				is(true));
+		
+		error.checkThat(locacao.getDataRetorno(), ehHojeComDiferencaDias(1));
+		error.checkThat(locacao.getDataLocacao(), ehHoje());
 
 	}
 
@@ -197,7 +202,7 @@ public class LocacaoServiceTest {
 		
 		//executa o teste de acordo com o assume no caso no domingo
 		//Assumebasically significa "não execute este teste se estas condições não se aplicarem"
-		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.MONDAY));
+		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 		
 		//cenario
 		Usuario usuario = new Usuario();
@@ -208,7 +213,11 @@ public class LocacaoServiceTest {
 		
 		//verificacao
 		Boolean ehDomingo = DataUtils.verificarDiaSemana(locacao.getDataRetorno(), Calendar.MONDAY);
-		Assert.assertTrue(ehDomingo);
+		error.checkThat(ehDomingo, is(true));
+		
+		error.checkThat(locacao.getDataRetorno(), new DiaSemanaMather(Calendar.MONDAY));
+		error.checkThat(locacao.getDataRetorno(), caiEm(Calendar.MONDAY));
+		error.checkThat(locacao.getDataRetorno(), caiNumaSegunda());
 	}
 	
 	
